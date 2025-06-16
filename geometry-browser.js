@@ -677,6 +677,7 @@ const guis = {
 
 };
 
+
 function chooseFromHash( mesh ) {
 
 	const selectedGeometry = window.location.hash.substring( 1 ) || 'TorusGeometry';
@@ -686,7 +687,6 @@ function chooseFromHash( mesh ) {
 		guis[ selectedGeometry ]( mesh );
 
 	}
-
 }
 
 //
@@ -697,6 +697,38 @@ if ( guis[ selectedGeometry ] !== undefined ) {
 
 	document.getElementById( 'newWindow' ).href += '#' + selectedGeometry;
 
+}
+
+
+function Torus ( mesh ) {
+
+	const data = {
+		radius: 10,
+		tube: 3,
+		radialSegments: 16,
+		tubularSegments: 100,
+		arc: twoPi
+	};
+
+	function generateGeometry() {
+
+		updateGroupGeometry( mesh,
+			new TorusGeometry(
+				data.radius, data.tube, data.radialSegments, data.tubularSegments, data.arc
+			)
+		);
+
+	}
+
+	const folder = gui.addFolder( 'THREE.TorusGeometry' );
+
+	folder.add( data, 'radius', 1, 20 ).onChange( generateGeometry );
+	folder.add( data, 'tube', 0.1, 10 ).onChange( generateGeometry );
+	folder.add( data, 'radialSegments', 2, 30 ).step( 1 ).onChange( generateGeometry );
+	folder.add( data, 'tubularSegments', 3, 200 ).step( 1 ).onChange( generateGeometry );
+	folder.add( data, 'arc', 0.1, twoPi ).onChange( generateGeometry );
+
+	generateGeometry();
 }
 
 const gui = new GUI();
@@ -739,7 +771,8 @@ const meshMaterial = new MeshPhongMaterial( { color: 0x156289, emissive: 0x07253
 group.add( new LineSegments( geometry, lineMaterial ) );
 group.add( new Mesh( geometry, meshMaterial ) );
 
-chooseFromHash( group );
+//chooseFromHash( group );
+Torus( group );
 
 scene.add( group );
 

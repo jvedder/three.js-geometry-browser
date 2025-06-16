@@ -3,8 +3,6 @@
 <head>
   <meta charset="utf-8">
   <title>Three.js Geometry Browser</title>
-  <link rel="shortcut icon" href="./favicon.ico" />
-  <link rel="stylesheet" type="text/css" href="./main.css">
   <style>
     canvas 
     {
@@ -12,26 +10,18 @@
       width: 100%;
       height: 100%;
     }
-
+    body 
+    {
+      margin: 0px;
+    }
   </style>
   <script type="importmap">
   {
-    "imports": 
-      {
-        "three":         "./three.module.js",
-        "x-browser":       "./geometry-browser.js",
-        "x-lil-gui":       "./lil-gui.module.min.js",
-        "x-OrbitControls": "./OrbitControls.js"
-      }
+    "imports": {"three": "./three.module.js"}
   }
   </script>
 </head>
 <body>
-	<div id="jv-container"> </div>
-<!--
-  <script type="module" src="three.core.js"></script>
-  <script src="04-simple-rotation-framework.js"></script>
--->
-	<script type="module" src="./geometry-browser.js"></script>
+  <script type="module" src="./geometry-browser.js"></script>
 </body>
 </html>

@@ -22,12 +22,14 @@ import {
 	OctahedronGeometry,
 	PerspectiveCamera,
 	PlaneGeometry,
+	RepeatWrapping,
 	RingGeometry,
 	Scene,
 	Shape,
 	ShapeGeometry,
 	SphereGeometry,
 	TetrahedronGeometry,
+	TextureLoader,
 	TorusGeometry,
 	TorusKnotGeometry,
 	TubeGeometry,
@@ -42,18 +44,30 @@ import { OrbitControls } from './OrbitControls.js';
 
 const twoPi = Math.PI * 2;
 
+const textureLoader = new TextureLoader();
+
+const bricks = textureLoader.load( 'bricks.jpg' );
+bricks.wrapS = RepeatWrapping;
+bricks.wrapT = RepeatWrapping;
+bricks.repeat.set( 9, 1 );
+
+const checker = textureLoader.load( 'checker.jpg' );
+checker.wrapS = RepeatWrapping;
+checker.wrapT = RepeatWrapping;
+checker.repeat.set( 9, 1 );
+
 const lineMaterial = new LineBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.1 } );
-const meshMaterial = new MeshPhongMaterial( { color: 0x156289, emissive: 0x072534, side: DoubleSide, flatShading: false } );
+const meshMaterial = new MeshPhongMaterial( { color: 0x156289, emissive: 0x072534, side: DoubleSide, flatShading: false, map: checker } );
 
 function MakeTorus ( group ) {
 
 	const data = {
 		radius: 10,
-		tube: 3,
+		tube: 1,
 		radialSegments: 16,
 		tubularSegments: 100,
 		arc: twoPi,
-		lines: true
+		lines: false
 	};
 
 	function generateGeometry() {

@@ -45,16 +45,6 @@ const twoPi = Math.PI * 2;
 const lineMaterial = new LineBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.1 } );
 const meshMaterial = new MeshPhongMaterial( { color: 0x156289, emissive: 0x072534, side: DoubleSide, flatShading: false } );
 
-
-function updateGroupGeometry( group, geometry ) {
-
-    // remove children
-	group.clear();
-
-	group.add( new LineSegments( geometry, lineMaterial ) );
-	group.add( new Mesh( geometry, meshMaterial ) );
-}
-
 function MakeTorus ( group ) {
 
 	const data = {
@@ -62,17 +52,22 @@ function MakeTorus ( group ) {
 		tube: 3,
 		radialSegments: 16,
 		tubularSegments: 100,
-		arc: twoPi
+		arc: twoPi,
+		lines: true
 	};
 
 	function generateGeometry() {
+		// remove children
+		group.clear();
 
-		updateGroupGeometry( group,
-			new TorusGeometry(
+		const geometry = new TorusGeometry(
 				data.radius, data.tube, data.radialSegments, data.tubularSegments, data.arc
 			)
-		);
-
+		if (data.lines)
+		{
+			group.add( new LineSegments( geometry, lineMaterial ) );
+		}
+		group.add( new Mesh( geometry, meshMaterial ) );
 	}
 
 	const folder = gui.addFolder( 'THREE.TorusGeometry' );
@@ -82,6 +77,10 @@ function MakeTorus ( group ) {
 	folder.add( data, 'radialSegments', 2, 30 ).step( 1 ).onChange( generateGeometry );
 	folder.add( data, 'tubularSegments', 3, 200 ).step( 1 ).onChange( generateGeometry );
 	folder.add( data, 'arc', 0.1, twoPi ).onChange( generateGeometry );
+
+	const folder2 = gui.addFolder( 'Appearance' );
+
+	folder2.add( data, 'lines').onChange( generateGeometry );
 
 	generateGeometry();
 }

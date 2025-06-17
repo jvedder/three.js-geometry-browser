@@ -42,41 +42,20 @@ import { OrbitControls } from './OrbitControls.js';
 
 const twoPi = Math.PI * 2;
 
-class CustomSinCurve extends Curve {
+const lineMaterial = new LineBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.1 } );
+const meshMaterial = new MeshPhongMaterial( { color: 0x156289, emissive: 0x072534, side: DoubleSide, flatShading: false } );
 
-	constructor( scale = 1 ) {
 
-		super();
+function updateGroupGeometry( group, geometry ) {
 
-		this.scale = scale;
+    // remove children
+	group.clear();
 
-	}
-
-	getPoint( t, optionalTarget = new Vector3() ) {
-
-		const tx = t * 3 - 1.5;
-		const ty = Math.sin( 2 * Math.PI * t );
-		const tz = 0;
-
-		return optionalTarget.set( tx, ty, tz ).multiplyScalar( this.scale );
-
-	}
-
+	group.add( new LineSegments( geometry, lineMaterial ) );
+	group.add( new Mesh( geometry, meshMaterial ) );
 }
 
-function updateGroupGeometry( mesh, geometry ) {
-
-	mesh.children[ 0 ].geometry.dispose();
-	mesh.children[ 1 ].geometry.dispose();
-
-	mesh.children[ 0 ].geometry = new WireframeGeometry( geometry );
-	mesh.children[ 1 ].geometry = geometry;
-
-	// these do not update nicely together if shared
-
-}
-
-function Torus ( mesh ) {
+function MakeTorus ( group ) {
 
 	const data = {
 		radius: 10,
@@ -88,7 +67,7 @@ function Torus ( mesh ) {
 
 	function generateGeometry() {
 
-		updateGroupGeometry( mesh,
+		updateGroupGeometry( group,
 			new TorusGeometry(
 				data.radius, data.tube, data.radialSegments, data.tubularSegments, data.arc
 			)
@@ -137,20 +116,9 @@ scene.add( lights[ 1 ] );
 scene.add( lights[ 2 ] );
 
 const group = new Group();
-
-const geometry = new BufferGeometry();
-geometry.setAttribute( 'position', new Float32BufferAttribute( [], 3 ) );
-
-const lineMaterial = new LineBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.1 } );
-const meshMaterial = new MeshPhongMaterial( { color: 0x156289, emissive: 0x072534, side: DoubleSide, flatShading: false } );
-
-group.add( new LineSegments( geometry, lineMaterial ) );
-group.add( new Mesh( geometry, meshMaterial ) );
-
-//chooseFromHash( group );
-Torus( group );
-
+MakeTorus( group );
 scene.add( group );
+
 
 function render() {
 

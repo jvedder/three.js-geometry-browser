@@ -17,6 +17,7 @@ import {
 	LatheGeometry,
 	LineSegments,
 	LineBasicMaterial,
+	MathUtils,
 	Mesh,
 	MeshPhongMaterial,
 	OctahedronGeometry,
@@ -54,6 +55,8 @@ bricks.repeat.set( 9, 1 );
 const checker = textureLoader.load( 'checker.jpg' );
 checker.wrapS = RepeatWrapping;
 checker.wrapT = RepeatWrapping;
+checker.center = new Vector2(0.5, 0.5);
+checker.rotation = MathUtils.degToRad(15);
 checker.repeat.set( 9, 1 );
 
 const lineMaterial = new LineBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.1 } );
